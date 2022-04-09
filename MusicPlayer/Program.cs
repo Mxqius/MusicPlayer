@@ -16,7 +16,14 @@ namespace MusicPlayer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frm_main());
+            try
+            {
+                Application.Run(new frm_musicplayer());
+            }
+            catch (Exception e)
+            {
+                return;
+            }
         }
     }
 }
