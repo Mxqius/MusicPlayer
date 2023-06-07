@@ -1,71 +1,242 @@
 ﻿using System;
+using MusicPlayer.UpdateFolder;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using DiscordRPC.Logging;
 using DiscordRPC;
 using DiscordRPC.Helper;
 using DiscordRPC.Message;
+using Guna.UI2.WinForms;
+using Microsoft.Win32;
+using MusicPlayer.Forms;
+using System.IO;
 using TagLib;
+using TagLib.Riff;
 using WMPLib;
 using Button = DiscordRPC.Button;
+using File = TagLib.File;
+using Timer = System.Windows.Forms.Timer;
+using System.Runtime.InteropServices;
+
 
 namespace MusicPlayer
 {
+
     public partial class frm_musicplayer : Form
     {
-        private bool SShuffle;
-        private bool SRepeat;
-        private bool mousedown_state;
-        private int indexR;
-        private int secound = 0;
-        private int minute = 0;
-        // float time;
+        // Update Result
+        public bool UpdateExist, Theme, autoPlay, SRepeat, mousedown_state, SShuffle;
+
+        // Random index For Shuffle
+        private int indexRandom, selectedIndexControl, secound = 0, minute = 0;
+        // Favorite Song List 
+        public List<string> favoritesList = new List<string>();
+        // Index Selected Control in Panel Music        
+        // Discord Object Client for Activity
         public DiscordRpcClient client;
+        public string songInfoURLPassed = "";
+        // Song Name
         private string filename = "Musicname";
+        // Address SongFile
         private string URL = "Musicname";
+        // Mode Play URL/File
         private string ModePlay = "File";
         private bool st = false;
+        // Get Index Music in List
+        public int indexPlayerMusic;
+        // List Address Musics
         private List<string> files = new List<string>();
-        private List<string> paths = new List<string>();
+        public List<string> paths = new List<string>();
+        // List Controls in PanelMusics
+        public List<ListBoxMusicPlayer> ControlsPanelMusicList = new List<ListBoxMusicPlayer>();
+        // ControlPanel ButtonsList
+        private Guna2Button[] ControlButtonsList = new Guna2Button[5];
+        // Defult Color Setting
+        public Color defColor = Color.WhiteSmoke;
+        // Old Color :  Color.FromArgb(53, 66, 89);
+        // Defult Font Setting
+        public Font defFont = new Font("Museo Sans Cyrl 900", 9, FontStyle.Bold);
+        // Object IniFile and Create File Ini
+        private IniFile iniFile = new IniFile(path);
         public frm_musicplayer()
         {
             InitializeComponent();
+            // DPI SCALING
+            //this.AutoScaleMode = AutoScaleMode.Dpi;
+            //------------------------
+            //Dark Icons ControlPanel 
+            btn_settings.Image = Properties.Resources.settingDark;
+            btn_about.Image = Properties.Resources.aboutDark;
+            btn_exit.Image = Properties.Resources.exitDark;
+            btn_addfile.Image = Properties.Resources.addDark;
+            btn_minimize.Image = Properties.Resources.minimizeDark;
+            btn_search.Image = Properties.Resources.searchDark;
+            //-----------------------------
             wmp_player.uiMode = "none";
             wmp_player.fullScreen = false;
+            // Rest Current Position and TrackBar
             rest_currentPosition();
             wmp_player.enableContextMenu = false;
             wmp_player.settings.volume = tb_volume.Value = 10;
             timer_controls.Stop();
             this.MinimumSize = this.Size;
+            // Set ControlPanel Buttons
+            ControlButtonsList = new[]
+            {
+                btn_exit,btn_about,btn_addfile,btn_minimize,btn_settings,btn_search
+            };
+            // Call Function LoadSettings From IniFile
+            LoadSettings();
+            // Set Label Text eqauls tb_volume
+            lbl_valueVolume.Text = "%" + tb_volume.Value;
+            // Open Child Form in Panel Settings
+            FormInPanelParent.openChildFormInPanel(new frm_settings(this), pnl_formSetting);
+            new UpdateFolder.Updater().CheckForUpdates();
         }
 
+        static string path = Application.StartupPath + @"\Setting.ini";
+        public void SaveSettings()
+        {
+            //if (!System.IO.File.Exists(path))
+            //    System.IO.File.Create(path);
+            iniFile.Write("ControlPanelColor", pnl_header.FillColor.ToArgb().ToString());
+            iniFile.Write("Repeat", SRepeat.ToString());
+            iniFile.Write("Shuffle", SShuffle.ToString());
+            iniFile.Write("AutoPlay", autoPlay.ToString());
+            iniFile.Write("Volume", tb_volume.Value.ToString());
+            iniFile.Write("TextColor", lbl_name_app.ForeColor.ToArgb().ToString());
+            iniFile.Write("Theme", Theme.ToString());
+        }
+
+        void setupOpenWithWindows()
+        {
+
+            // This Command Must run with administrator
+
+            // Replace "MyTextEditor" with the name of your application
+            string appName = "Music Player";
+
+            // Get the path to your application executable
+            string appPath = Application.ExecutablePath;
+
+            string fileExt = ".txt";
+
+            string keyPath = $@"{fileExt}\OpenWithProgids";
+
+            using (RegistryKey keyR = Registry.ClassesRoot.OpenSubKey(keyPath))
+                if (keyR != null && keyR.GetValue(appName) != null)
+                    // The application is already registered, so exit the method
+                    return;
+
+            // Create a registry key for your application
+            RegistryKey key = Registry.ClassesRoot.CreateSubKey("*\\shell\\" + appName);
+
+            // Set the display name for your application in the "Open with" menu
+            key.SetValue("", "Open with " + appName);
+
+            // Create a subkey for the command to open your application
+            RegistryKey commandKey = key.CreateSubKey("command");
+
+            // Set the command to open your application
+            commandKey.SetValue("", "\"" + appPath + "\" \"%1\"");
+        }
+        public void AddFavoriteSong(string musicAddress)
+        {
+            var item = ControlsPanelMusicList.Find(n => n.MusicAddress == musicAddress);
+            favoritesList.Add(item.MusicAddress);
+            //item.pic_favorite.Image = Properties.Resources.favoriteSelected;
+            if (!System.IO.File.Exists(Application.StartupPath + @"\favorites.txt"))
+                System.IO.File.Create(Application.StartupPath + @"\favorites.txt");
+            using (StreamReader sr = new StreamReader(Application.StartupPath + @"\favorites.txt"))
+            {
+                string textOld = sr.ReadToEnd();
+                sr.Close();
+                using (StreamWriter sw = new StreamWriter(Application.StartupPath + @"\favorites.txt"))
+                {
+                    sw.Write(textOld.Trim() + "\n" + item.MusicAddress);
+                }
+            }
+        }
+        public bool checkFavorite(string musicAddress)
+        {
+            return favoritesList.Any(n => n == musicAddress);
+        }
+
+        public async void deleteFavorite(string musicAddress)
+        {
+            favoritesList.Remove(musicAddress);
+            using (StreamWriter sw = new StreamWriter(Application.StartupPath + @"\favorites.txt"))
+            {
+                foreach (string favorite in favoritesList)
+                {
+                    await sw.WriteAsync(favorite + "\n");
+                }
+            }
+
+        }
+        public void LoadSettings()
+        {
+            if (System.IO.File.Exists(path))
+            {
+                pnl_header.FillColor = Color.FromArgb(int.Parse(iniFile.Read("ControlPanelColor")));
+                SRepeat = btn_repeat.Checked = bool.Parse(iniFile.Read("Repeat"));
+                SShuffle = btn_shuffle.Checked = bool.Parse(iniFile.Read("Shuffle"));
+                autoPlay = btn_autoPlay.Checked = bool.Parse(iniFile.Read("AutoPlay"));
+                tb_volume.Value = wmp_player.settings.volume = int.Parse(iniFile.Read("Volume"));
+                lbl_name_app.ForeColor = Color.FromArgb(int.Parse(iniFile.Read("TextColor")));
+                Theme = bool.Parse(iniFile.Read("Theme"));
+                if (Theme)
+                {
+                    // Light
+
+                    btn_settings.Image = Properties.Resources.settings1;
+                    btn_about.Image = Properties.Resources.about;
+                    btn_exit.Image = Properties.Resources.exit1;
+                    btn_addfile.Image = Properties.Resources.add;
+                    btn_minimize.Image = Properties.Resources.minimize;
+                    btn_search.Image = Properties.Resources.search;
+                }
+                else
+                {
+                    // Dark
+                    btn_settings.Image = Properties.Resources.settingDark;
+                    btn_about.Image = Properties.Resources.aboutDark;
+                    btn_exit.Image = Properties.Resources.exitDark;
+                    btn_addfile.Image = Properties.Resources.addDark;
+                    btn_minimize.Image = Properties.Resources.minimizeDark;
+                    btn_search.Image = Properties.Resources.searchDark;
+                }
+                if (autoPlay)
+                {
+                    btn_autoPlay.FillColor = Color.FromArgb(18, 174, 64);
+                    //                    btn_autoPlay.Text = "AutoPlay On";
+                }
+            }
+        }
         private void btn_exit_Click(object sender, EventArgs e)
         {
             ni_notify.Dispose();
             cms_notify.Dispose();
             Application.Exit();
+
         }
         void DisableTb_Music()
         {
-            if (lb_musics.Items.Count <= 0)
-            {
+            if (ControlsPanelMusicList.Count <= 0)
                 tb_music.Enabled = false;
-            }
             else
             {
                 if (lbl_status.Text == "None")
-                {
                     tb_music.Enabled = false;
-                }
                 else
-                {
                     tb_music.Enabled = true;
-                }
             }
         }
         private void frm_main_Load(object sender, EventArgs e)
@@ -75,23 +246,25 @@ namespace MusicPlayer
             DisableTb_Music();
             tb_volume.Value = wmp_player.settings.volume;
             Initialize();
-            client.ClearPresence();
-            client.SetPresence(new RichPresence()
+            LoadFavoritesSongs(true, false);
+            //setupOpenWithWindows();
+            // checkUpdate();
+        }
+
+        public Dictionary<string, string> updateInfo = new Dictionary<string, string>();
+        private void checkUpdate()
+        {
+            string data = UpdateFolder.Update.getUpdateFile("https://mxqius.ir/MusicPlayer/Updates/update.js");
+            var json = UpdateFolder.Update.getJson(data);
+            if (json.version != Application.ProductVersion)
             {
-                Details = "Ideal",
-                State = $"State : {lbl_status.Text}",
-                Timestamps = Timestamps.Now,
-                Assets = new Assets()
-                {
-                    LargeImageKey = "music",
-                    LargeImageText = "Enjoy",
-                },
-                Buttons = new[]
-                {
-                    new Button(){ Label = "Server Discord", Url = "https://discord.gg/TPa9n4Zkau" },
-                    new Button(){ Label="Donate❤️", Url = "https://www.cafebede.ir"}
-                }
-            });
+                UpdateExist = true;
+                updateInfo.Add("Name", json.name);
+                updateInfo.Add("Version", json.version);
+                updateInfo.Add("DatePublisher", json.datePublisher);
+                updateInfo.Add("DownloadAddress", json.downloadAddress);
+            }
+
         }
         void Initialize()
         {
@@ -123,6 +296,17 @@ namespace MusicPlayer
             //  Call this as many times as you want and anywhere in your code.
             ShowDiscordStatus();
         }
+        byte[] getBuffersImage(PictureBox picture)
+        {
+            // Get the byte buffer of the image in the PictureBox control
+            byte[] byteBuffer = null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                picture.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                byteBuffer = ms.ToArray();
+            }
+            return byteBuffer;
+        }
 
         void ShowDiscordStatus()
         {
@@ -134,28 +318,31 @@ namespace MusicPlayer
                 Assets = new Assets()
                 {
                     LargeImageKey = "music",
-                    LargeImageText = "Enjoy❤️",
+                    LargeImageText = "Enjoy❤️"
                 },
-                Buttons = new Button[]
+                Buttons = new[]
                 {
-                    new Button() { Label = "Server Discord", Url = "https://discord.gg/TPa9n4Zkau" },
+                    new Button() { Label = "Server Discord", Url = "https://discord.gg/hC2r8gSKma" },
                     new Button() { Label="Donate❤️", Url = "https://www.cafebede.ir"}
                 }
 
             });
         }
-        void PlayFile(int index)
+        public void PlayFile(string url)
         {
-            wmp_player.URL = paths[index];
+
+            wmp_player.URL = url;
+            FocusMusic(url);
+            selectedIndexControl = ControlsPanelMusicList.FindIndex(n => n.MusicAddress == wmp_player.URL);
             timer_time_muic.Enabled = true;
             wmp_player.Ctlcontrols.play();
+            // indexPlayerMusic = ControlsPanelMusicList.FindIndex(n => n.MusicAddress == wmp_player.URL);
             lb_musics.SelectedIndex = lb_musics.SelectedIndex;
             GetInfoFile(wmp_player.URL);
             pb_big_image_music.Image = GetImageFile(wmp_player.URL);
             st = true;
             tsm_name_song.Text = $"Song : {lbl_music_name.Text}";
             CheckMute();
-
             if (st)
             {
                 btn_play_pause.Image = Properties.Resources.icon_pause;
@@ -163,6 +350,20 @@ namespace MusicPlayer
             else
             {
                 btn_play_pause.Image = Properties.Resources.icon_play;
+            }
+        }
+
+        void FocusMusic(string url)
+        {
+            foreach (var control in ControlsPanelMusicList)
+            {
+                if (control.MusicAddress == url)
+                {
+                    control.BackColor = Color.DarkGray;
+                    control.Focus();
+                    SetFocusedRight();
+                    break;
+                }
             }
         }
         void CheckMute()
@@ -181,10 +382,6 @@ namespace MusicPlayer
         }
         private void btn_play_pause_Click(object sender, EventArgs e)
         {
-            if (lb_musics.Items.Count <= 0 || lb_musics.SelectedIndex < 0)
-            {
-                return;
-            }
             if (st)
             {
                 wmp_player.Ctlcontrols.currentPosition = tb_music.Value;
@@ -215,26 +412,119 @@ namespace MusicPlayer
                 }
             }
         }
+        void SetSingleMusicItemListBoxControlUser()
+        {
+            for (int i = 0; i < ControlsPanelMusicList.Count; i++)
+            {
+                for (int j = i + 1; j < ControlsPanelMusicList.Count; j++)
+                {
+                    if (ControlsPanelMusicList[i].MusicAddress == ControlsPanelMusicList[j].MusicAddress)
+                        ControlsPanelMusicList.RemoveAt(j);
+                }
+            }
+        }
+        async Task insertControl(List<ListBoxMusicPlayer> list)
+        {
+            await Task.Run(() =>
+            {
+                pnl_listMusics.Invoke(new Action(() =>
+                {
+                    pnl_listMusics.Controls.AddRange(list.ToArray());
+                }));
+            });
+        }
+        async Task InsertFilesMusic()
+        {
+            await Task.Run(() =>
+            {
+                paths = paths.Distinct().ToList();
+                ControlsPanelMusicList.Clear();
+                pnl_listMusics.Invoke(new Action(() =>
+                {
+                    pnl_listMusics.Controls.Clear();
+                }));
+                for (int i = 0; i < paths.Count; i++)
+                {
+                    var control = new ListBoxMusicPlayer(this, i, paths[i], getFileName(paths[i]),
+                        getDuration(paths[i]), GetImageFile(paths[i]), ControlOnClick, ControlOnMouseHover)
+                    {
+                        Dock = DockStyle.Top
+                    };
+                    ControlsPanelMusicList.Add(control);
+                    if (favoritesList.Any(n => n == control.MusicAddress))
+                        control.pic_favorite.Image = Properties.Resources.favoriteSelected;
+                }
 
-        void FileMode()
+                ControlsPanelMusicList.Reverse();
+                pnl_listMusics.Invoke(new Action(() =>
+                {
+                    pnl_listMusics.Controls.AddRange(ControlsPanelMusicList.ToArray());
+                }));
+            });
+        }
+        async void FileMode()
         {
             // -- |Wav Files |*.wav
-            opd_addmusic.Filter = "Mp3 Files|*.mp3|Wav Files|*.wav";
+            opd_addmusic.Filter = "Audio File (*.mp3;*.wav)|*.mp3;*.wav";
             opd_addmusic.FileName = string.Empty;
             DialogResult dr = opd_addmusic.ShowDialog();
             if (dr == DialogResult.OK)
             {
                 files.AddRange(opd_addmusic.SafeFileNames);
                 paths.AddRange(opd_addmusic.FileNames);
-                paths = paths.Distinct().ToList();
-                for (int i = 0; i < files.Count; i++)
-                {
-                    lb_musics.AddItem(files[i]);
-                }
+                await InsertFilesMusic();
                 files.Clear();
-                SetSingleMusicItemListBox();
+            }
+
+            SetFocusedRight();
+            FocusMusic(wmp_player.URL);
+        }
+
+        private void LoadFavoritesSongs(bool favoriteInsert, bool pathsInsert = true)
+        {
+            if (System.IO.File.Exists(@"favorites.txt"))
+            {
+                using (StreamReader sr = new StreamReader(Application.StartupPath + @"\favorites.txt"))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        if (pathsInsert)
+                            paths.Add(sr.ReadLine());
+                        if (favoriteInsert)
+                            favoritesList.Add(sr.ReadLine());
+                    }
+                }
             }
         }
+        private void ControlOnMouseHover(object sender, EventArgs e)
+        {
+            tt_listbox.SetToolTip(((Control)sender), paths.Count.ToString());
+        }
+
+        public void SetFocusedRight()
+        {
+            foreach (var control in ControlsPanelMusicList)
+            {
+                if (control.MusicAddress == wmp_player.URL)
+                    control.BackColor = Color.FromArgb(228, 228, 228);
+                else
+                    control.BackColor = Color.WhiteSmoke;
+
+            }
+        }
+        private void ControlOnClick(object sender, EventArgs e)
+        {
+
+            if (((Control)sender) is ListBoxMusicPlayer)
+            {
+                indexPlayerMusic = ((ListBoxMusicPlayer)sender).IndexMusic;
+                PlayFile(((ListBoxMusicPlayer)sender).MusicAddress);
+                SetFocusedRight();
+                ((ListBoxMusicPlayer)sender).BackColor = Color.FromArgb(228, 228, 228);
+            }
+
+        }
+
         void UrlMode()
         {
             opd_addmusic.Filter = "Text Files|*.txt";
@@ -254,7 +544,6 @@ namespace MusicPlayer
                     }
                 }
                 files.Clear();
-                SetSingleMusicItemListBox();
             }
         }
         private void btn_addfile_Click(object sender, EventArgs e)
@@ -271,7 +560,7 @@ namespace MusicPlayer
 
         private void btn_repeat_Click(object sender, EventArgs e)
         {
-            if (lb_musics.Items.Count > 0)
+            if (ControlsPanelMusicList.Count > 0)
             {
                 btn_repeat.Checked = !btn_repeat.Checked;
                 SRepeat = !SRepeat;
@@ -316,8 +605,8 @@ namespace MusicPlayer
                     mStream.Dispose();
                     return bm;
                 }
-                pb_big_image_music.Image = Properties.Resources.defult_img;
-                return null;
+                //return Properties.Resources.noPictureMusic;
+                return Properties.Resources.musicListIcon;
 
             }
             catch (System.ArgumentException ex)
@@ -326,7 +615,7 @@ namespace MusicPlayer
                 paths.RemoveAt(lb_musics.SelectedIndex);
                 files.RemoveAt(lb_musics.SelectedIndex);
                 lb_musics.Items.RemoveAt(lb_musics.SelectedIndex);
-                PlayFile(lb_musics.SelectedIndex + 1);
+                // PlayFile(lb_musics.SelectedIndex + 1);
                 return Properties.Resources.defult_img;
             }
             catch (Exception)
@@ -338,11 +627,25 @@ namespace MusicPlayer
                 return null;
             }
         }
+
+        private string getFileName(string url)
+        {
+            return Path.GetFileName(url);
+        }
+
+        private string getDuration(string url)
+        {
+            var tfile = TagLib.File.Create(url);
+            TimeSpan duration = tfile.Properties.Duration;
+            string minute = Convert.ToString(duration.Minutes);
+            string secound = Convert.ToString(duration.Seconds);
+            return $"{minute.PadLeft(2, '0')}:{secound.PadLeft(2, '0')}";
+        }
         void GetInfoFile(string Url)
         {
             try
             {
-                filename = Path.GetFileName(Url);
+                filename = getFileName(Url);
                 lbl_music_name.Text = filename;
                 var tfile = TagLib.File.Create(Url);
                 TimeSpan duration = tfile.Properties.Duration;
@@ -350,7 +653,7 @@ namespace MusicPlayer
                 string secound_tt = Convert.ToString(duration.Seconds);
                 int a = Convert.ToInt32(minute_tt) * 60;
                 tb_music.Maximum = a + Convert.ToInt32(secound_tt) + 1;
-                lbl_total_time.Text = $"{minute_tt.PadLeft(2, '0')}:{secound_tt.PadLeft(2, '0')}";
+                lbl_total_time.Text = getDuration(Url);
             }
             catch (TagLib.CorruptFileException)
             {
@@ -365,61 +668,43 @@ namespace MusicPlayer
                 MessageBox.Show("Can not Find Song Selected !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void btn_play_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (lbl_status.Text == "Stop" || lbl_status.Text == "Pause" || lbl_status.Text == "None")
-                {
-                    timer_time_muic.Enabled = true;
-                }
-            }
-            catch (TagLib.UnsupportedFormatException)
-            {
-                return;
-            }
-            catch (System.ArgumentException)
-            {
-                pb_big_image_music.Image = Properties.Resources.defult_img;
-            }
-        }
 
 
         private void NextOrPervious()
         {
             if (ModePlay == "File")
             {
-                PlayFile(lb_musics.SelectedIndex);
+                PlayFile(ControlsPanelMusicList[selectedIndexControl].MusicAddress);
             }
             else
             {
-                PlayUrl(lb_musics.SelectedIndex);
+                PlayUrl(indexPlayerMusic);
             }
         }
         private void btn_next_Click(object sender, EventArgs e)
         {
-            if (lb_musics.SelectedIndex < lb_musics.Items.Count - 1 && lb_musics.Count > 0)
+            if (ControlsPanelMusicList.Count > 1 && selectedIndexControl != 0 && selectedIndexControl != -1)
             {
-                lb_musics.SelectedIndex++;
+                selectedIndexControl--;
                 NextOrPervious();
             }
-            else if (lb_musics.Count > 0 && lb_musics.SelectedIndex == lb_musics.Count - 1)
+            else if (selectedIndexControl == 0 && ControlsPanelMusicList.Count > 2)
             {
-                lb_musics.SelectedIndex = 0;
+                selectedIndexControl = paths.Count - 1;
                 NextOrPervious();
             }
         }
 
         private void btn_previous_Click(object sender, EventArgs e)
         {
-            if (lb_musics.Count > 1 && lb_musics.SelectedIndex != 0 && lb_musics.SelectedIndex != -1)
+            if (selectedIndexControl < ControlsPanelMusicList.Count - 1 && ControlsPanelMusicList.Count > 0)
             {
-                lb_musics.SelectedIndex--;
+                selectedIndexControl++;
                 NextOrPervious();
             }
-            else if (lb_musics.SelectedIndex == 0 && lb_musics.Count > 2)
+            else if (ControlsPanelMusicList.Count > 0 && selectedIndexControl == ControlsPanelMusicList.Count - 1)
             {
-                lb_musics.SelectedIndex = lb_musics.Count - 1;
+                selectedIndexControl = 0;
                 NextOrPervious();
             }
         }
@@ -430,22 +715,22 @@ namespace MusicPlayer
                 if (SShuffle)
                 {
                     Random rd = new Random();
-                    indexR = rd.Next(0, lb_musics.Items.Count);
-                    lb_musics.SelectedIndex = indexR;
+                    indexRandom = rd.Next(0, ControlsPanelMusicList.Count);
+                    indexPlayerMusic = indexRandom;
                     if (ModePlay == "File")
                     {
-                        PlayFile(indexR);
+                        PlayFile(ControlsPanelMusicList[indexPlayerMusic].MusicAddress);
                     }
                     else
                     {
-                        PlayUrl(indexR);
+                        PlayUrl(indexRandom);
                     }
                 }
             }
         }
         private void btn_shuffle_Click(object sender, EventArgs e)
         {
-            if (lb_musics.Items.Count > 0)
+            if (ControlsPanelMusicList.Count > 0)
             {
                 SShuffle = !SShuffle;
                 btn_shuffle.Checked = !btn_shuffle.Checked;
@@ -459,11 +744,13 @@ namespace MusicPlayer
                 rest_frm();
                 if (ModePlay == "File")
                 {
-                    PlayFile(lb_musics.SelectedIndex);
+                    //PlayFile(ControlsPanelMusicList.Find(n => n.MusicAddress == wmp_player.URL).MusicAddress);
+                    PlayFile(wmp_player.URL);
                 }
                 else
                 {
-                    PlayUrl(lb_musics.SelectedIndex);
+                    //PlayUrl(lb_musics.SelectedIndex);
+                    PlayUrl(indexPlayerMusic);
                 }
             }
         }
@@ -478,7 +765,7 @@ namespace MusicPlayer
             WindowState = FormWindowState.Minimized;
         }
 
-        private bool dragging = false;
+        private bool dragging;
         private Point dragCursorPoint;
         private Point dragFormPoint;
         private void pnl_background_MouseMove(object sender, MouseEventArgs e)
@@ -572,30 +859,28 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         private void ltsm_clear_Click(object sender, EventArgs e)
         {
-            lb_musics.Items.Clear();
-            if (ModePlay == "File")
+            if (ControlsPanelMusicList.Count > 0)
             {
-                paths.Clear();
-                files.Clear();
+                if (SRepeat)
+                    btn_repeat_Click(null, null);
+                if (SShuffle)
+                    btn_shuffle_Click(null, null);
+                if (autoPlay)
+                    btn_autoPlay_Click(null, null);
+                pnl_listMusics.Controls.Clear();
+                ControlsPanelMusicList.Clear();
+                if (ModePlay == "File")
+                {
+                    paths.Clear();
+                    files.Clear();
+                }
+
+                lbl_shuffle.Text = "Off";
+                lbl_shuffle.ForeColor = Color.PaleTurquoise;
+                indexPlayerMusic = selectedIndexControl = 0;
             }
-            lbl_shuffle.Text = "Off";
-            lbl_shuffle.ForeColor = Color.PaleTurquoise;
-            SShuffle = false;
-            SRepeat = false;
         }
 
-        private void ltsm_delete_select_Click(object sender, EventArgs e)
-        {
-            int index = lb_musics.SelectedIndex;
-            if (index >= 0)
-            {
-                lb_musics.Items.RemoveAt(index);
-                paths.RemoveAt(index);
-            }
-        }
-
-        // List for files Enter with drag and add to listbox
-        // List<FIleIteam> mediafile = new List<FIleIteam>();
         private void lb_musics_DragDrop(object sender, DragEventArgs e)
         {
             string[] file = (string[])e.Data.GetData(DataFormats.FileDrop, false);
@@ -707,32 +992,31 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 IWMPMedia2 errSource = e.pMediaObject as IWMPMedia2;
                 IWMPErrorItem errorItem = errSource.Error;
                 MessageBox.Show("Error " + errorItem.errorCode.ToString("X")
-                                + " in " + errSource.sourceURL);
+                                + " in " + errSource.sourceURL, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (InvalidCastException)
             // In case pMediaObject is not an IWMPMedia item.
             {
-                MessageBox.Show("Error.");
+                MessageBox.Show("Error");
             }
         }
 
         private void frm_main_FormClosing(object sender, FormClosingEventArgs e)
         {
+            SaveSettings();
             rest_currentPosition();
             ni_notify.Dispose();
             cms_notify.Dispose();
         }
         private void tb_volume_Scroll(object sender, ScrollEventArgs e)
         {
-            if (btn_mute_volume.Checked == true)
+            lbl_valueVolume.Text = "%" + tb_volume.Value;
+            if (btn_mute_volume.Checked)
             {
                 wmp_player.settings.mute = true;
                 return;
             }
-            else
-            {
-                wmp_player.settings.volume = tb_volume.Value;
-            }
+            wmp_player.settings.volume = tb_volume.Value;
             // chng icon for volumes
 
             if (tb_volume.Value < 50)
@@ -808,6 +1092,8 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
             {
                 wmp_player.Ctlcontrols.currentPosition = tb_music.Value;
             }
+
+            mousedown_state = !mousedown_state;
         }
 
         private void frm_main_SizeChanged(object sender, EventArgs e)
@@ -831,7 +1117,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
         {
             if (ModePlay == "File")
             {
-                PlayFile(lb_musics.SelectedIndex);
+                //PlayFile(lb_musics.SelectedIndex);
             }
             else
             {
@@ -843,7 +1129,6 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
         private void lb_musics_MouseHover(object sender, EventArgs e)
         {
             tt_listbox.SetToolTip(lb_musics, lb_musics.Count.ToString());
-            // tt_listbox.Show();
         }
 
         private void timer_time_muic_Tick(object sender, EventArgs e)
@@ -855,9 +1140,16 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
+        private void AutoPlay()
+        {
+            if (autoPlay)
+                btn_next_Click(null, null);
+            //    PlayFile(ControlsPanelMusicList[--selectedIndexControl].MusicAddress);
+        }
         private void timer_controls_Tick(object sender, EventArgs e)
         {
             Repeat();
+            AutoPlay();
             Shuffle();
         }
 
@@ -866,43 +1158,166 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
             pb_big_image_music.Visible = true;
             wmp_player.Visible = false;
         }
-
-        private void tsm_file_muic_CheckedChanged(object sender, EventArgs e)
+        private void pnl_listMusics_MouseHover(object sender, EventArgs e)
         {
-            if (tsm_file_muic.Checked)
+            tt_listbox.SetToolTip(pnl_listMusics, paths.Count.ToString());
+        }
+
+        private void pnl_listMusics_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] file = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            if (ModePlay == "File")
             {
-                lb_musics.Clear();
-                tsm_url_music.Checked = false;
-                ModePlay = "File";
+                foreach (string f in file)
+                {
+                    if (f.EndsWith(".mp3") || f.EndsWith(".wav"))
+                    {
+                        paths.Add(f);
+                    }
+                }
+
+                InsertFilesMusic();
             }
         }
 
-        private void tsm_url_music_CheckedChanged(object sender, EventArgs e)
+        private void pnl_listMusics_DragEnter(object sender, DragEventArgs e)
         {
-            if (tsm_url_music.Checked)
+            string[] file = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            if (ModePlay == "File")
             {
-                paths.Clear();
-                files.Clear();
-                lb_musics.Clear();
-                tsm_file_muic.Checked = false;
-                ModePlay = "Url";
+                foreach (string f in file)
+                {
+                    if (!f.EndsWith(".mp3") && !f.EndsWith(".wav"))
+                    {
+                        e.Effect = DragDropEffects.None;
+                    }
+                    else
+                    {
+                        e.Effect = DragDropEffects.All;
+                    }
+                }
+            }
+            else
+            {
+                foreach (string f in file)
+                {
+                    if (!f.EndsWith(".txt"))
+                    {
+                        e.Effect = DragDropEffects.None;
+                    }
+                    else
+                    {
+                        e.Effect = DragDropEffects.All;
+                    }
+                }
+            }
+        }
+        private void btn_autoPlay_Click(object sender, EventArgs e)
+        {
+            if (ControlsPanelMusicList.Count > 1)
+            {
+                btn_autoPlay.FillColor = !autoPlay ? Color.FromArgb(18, 174, 64) : Color.FromArgb(255, 0, 1);
+                autoPlay = !autoPlay;
             }
         }
 
-        private void tsm_url_music_Click(object sender, EventArgs e)
+        private void FocusButtonsControl(object sender, MouseEventArgs e)
         {
-            tsm_url_music.Checked = !tsm_url_music.Checked;
+            foreach (var control in ControlButtonsList)
+            {
+                if (control.Name == ((Control)sender).Name)
+                    control.ImageSize = new Size(34, 34);
+                else
+                    control.ImageSize = new Size(30, 30);
+            }
         }
 
-        private void tsm_file_muic_Click(object sender, EventArgs e)
+        private void pb_big_image_music_MouseMove(object sender, MouseEventArgs e)
         {
-            tsm_file_muic.Checked = !tsm_file_muic.Checked;
+            pb_big_image_music.BorderRadius = 10;
         }
 
-        private void btn_downloader_Click(object sender, EventArgs e)
+        private void pb_big_image_music_MouseLeave(object sender, EventArgs e)
         {
-            frm_dl fl = new frm_dl(wmp_player);
-            fl.Show();
+            pb_big_image_music.BorderRadius = 3;
         }
+
+        private void btn_settings_Click(object sender, EventArgs e)
+        {
+            pnl_formSetting.Visible = true;
+            //pnl_formSetting.Refresh();
+            //  lbl_name_app.Text = "MusicPlayer / Settings";
+        }
+
+        private async void txt_search_TextChanged(object sender, EventArgs e)
+        {
+            if (txt_search.Text.Trim().Length <= 1)
+            {
+                pnl_listMusics.Controls.Clear();
+                await insertControl(ControlsPanelMusicList);
+            }
+            var searchResult = ControlsPanelMusicList.FindAll(x => x.SetName.Contains(txt_search.Text.Trim()));
+            if (searchResult.Count > 0)
+            {
+                pnl_listMusics.Controls.Clear();
+                await insertControl(searchResult);
+            }
+        }
+
+        private void btn_search_Click(object sender, EventArgs e)
+        {
+            txt_search.Visible = btn_autoPlay.Visible;
+            btn_autoPlay.Visible = !txt_search.Visible;
+        }
+
+        private void headerControls_MouseLeave(object sender, EventArgs e)
+        {
+            ((Guna2Button)sender).ImageSize = new Size(30, 30);
+        }
+
+
+        private void tb_music_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            tb_music.Value += 10;
+        }
+
+        private void tsm_info_Click(object sender, EventArgs e)
+        {
+            new frm_songInfo(songInfoURLPassed).ShowDialog();
+        }
+
+        private async void tsm_loadFavorites_Click(object sender, EventArgs e)
+        {
+            LoadFavoritesSongs(false);
+            await InsertFilesMusic();
+        }
+
+        private void ni_notify_DoubleClick(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+                WindowState = FormWindowState.Normal;
+        }
+
+        private static Random random = new Random();
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        private async void tsm_savePicture_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog()
+            {
+                Title = "Save Picture",
+                Filter = "PNG File|*.png",
+                FileName = RandomString(12)
+            };
+            if (sfd.ShowDialog() == DialogResult.OK)
+                using (Bitmap b = new Bitmap(pb_big_image_music.Image))
+                    b.Save(sfd.FileName);
+
+        }
+
     }
 }

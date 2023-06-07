@@ -248,9 +248,9 @@ namespace MusicPlayer
             this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(55, 13);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(215, 20);
+            this.label3.Size = new System.Drawing.Size(111, 20);
             this.label3.TabIndex = 3;
-            this.label3.Text = "MusicPlayer Downloader";
+            this.label3.Text = "Downloader";
             // 
             // label2
             // 
