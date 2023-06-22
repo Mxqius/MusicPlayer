@@ -84,7 +84,7 @@ namespace MusicPlayer
 
         private void pic_deleteMusic_Click(object sender, EventArgs e)
         {
-            formMusicPlayer.paths.Remove(this.MusicAddress);
+            formMusicPlayer.fileInformations.Remove(formMusicPlayer.fileInformations.Find(m => m.Path == this.MusicAddress));
             formMusicPlayer.pnl_listMusics.Controls.Remove(this);
             formMusicPlayer.ControlsPanelMusicList.Remove(this);
         }

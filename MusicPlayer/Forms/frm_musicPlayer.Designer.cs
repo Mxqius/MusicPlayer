@@ -106,7 +106,7 @@ namespace MusicPlayer
             // 
             // blf_frm_main
             // 
-            this.blf_frm_main.BorderRadius = 5;
+            this.blf_frm_main.BorderRadius = 15;
             this.blf_frm_main.ContainerControl = this;
             this.blf_frm_main.DockForm = false;
             this.blf_frm_main.DockIndicatorColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(59)))), ((int)(((byte)(115)))));
@@ -126,6 +126,7 @@ namespace MusicPlayer
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnl_music_main.BackColor = System.Drawing.Color.Transparent;
+            this.pnl_music_main.Controls.Add(this.pnl_formSetting);
             this.pnl_music_main.Controls.Add(this.pnl_listMusics);
             this.pnl_music_main.Controls.Add(this.lb_musics);
             this.pnl_music_main.Controls.Add(this.pb_big_image_music);
@@ -172,8 +173,8 @@ namespace MusicPlayer
             this.cms_list_musics.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.cms_list_musics.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsm_loadFavorites,
-            this.ltsm_clear,
-            this.tsm_info});
+            this.tsm_info,
+            this.ltsm_clear});
             this.cms_list_musics.Name = "guna2ContextMenuStrip1";
             this.cms_list_musics.RenderStyle.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(151)))), ((int)(((byte)(143)))), ((int)(((byte)(255)))));
             this.cms_list_musics.RenderStyle.BorderColor = System.Drawing.Color.Gainsboro;
@@ -189,21 +190,21 @@ namespace MusicPlayer
             // tsm_loadFavorites
             // 
             this.tsm_loadFavorites.Name = "tsm_loadFavorites";
-            this.tsm_loadFavorites.Size = new System.Drawing.Size(173, 24);
+            this.tsm_loadFavorites.Size = new System.Drawing.Size(210, 24);
             this.tsm_loadFavorites.Text = "Load Favorites";
             this.tsm_loadFavorites.Click += new System.EventHandler(this.tsm_loadFavorites_Click);
             // 
             // ltsm_clear
             // 
             this.ltsm_clear.Name = "ltsm_clear";
-            this.ltsm_clear.Size = new System.Drawing.Size(173, 24);
+            this.ltsm_clear.Size = new System.Drawing.Size(210, 24);
             this.ltsm_clear.Text = "ClearList";
             this.ltsm_clear.Click += new System.EventHandler(this.ltsm_clear_Click);
             // 
             // tsm_info
             // 
             this.tsm_info.Name = "tsm_info";
-            this.tsm_info.Size = new System.Drawing.Size(173, 24);
+            this.tsm_info.Size = new System.Drawing.Size(210, 24);
             this.tsm_info.Text = "Song Info";
             this.tsm_info.Click += new System.EventHandler(this.tsm_info_Click);
             // 
@@ -639,7 +640,7 @@ namespace MusicPlayer
             this.btn_stop.FillColor = System.Drawing.Color.Empty;
             this.btn_stop.Font = new System.Drawing.Font("Museo Sans Cyrl 900", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_stop.ForeColor = System.Drawing.Color.White;
-            this.btn_stop.Image = global::MusicPlayer.Properties.Resources.stop_icon;
+            this.btn_stop.Image = global::MusicPlayer.Properties.Resources.stopIcon;
             this.btn_stop.ImageSize = new System.Drawing.Size(60, 60);
             this.btn_stop.Location = new System.Drawing.Point(345, 489);
             this.btn_stop.Name = "btn_stop";
@@ -655,7 +656,7 @@ namespace MusicPlayer
             this.tb_volume.Name = "tb_volume";
             this.tb_volume.Size = new System.Drawing.Size(214, 23);
             this.tb_volume.TabIndex = 4;
-            this.tb_volume.ThumbColor = System.Drawing.Color.Coral;
+            this.tb_volume.ThumbColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.tb_volume.Value = 0;
             this.tb_volume.Scroll += new System.Windows.Forms.ScrollEventHandler(this.tb_volume_Scroll);
             // 
@@ -668,7 +669,7 @@ namespace MusicPlayer
             this.tb_music.Name = "tb_music";
             this.tb_music.Size = new System.Drawing.Size(468, 23);
             this.tb_music.TabIndex = 4;
-            this.tb_music.ThumbColor = System.Drawing.Color.Coral;
+            this.tb_music.ThumbColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.tb_music.Value = 0;
             this.tb_music.Scroll += new System.Windows.Forms.ScrollEventHandler(this.tb_music_Scroll);
             this.tb_music.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_music_KeyDown);
@@ -704,7 +705,7 @@ namespace MusicPlayer
             this.btn_shuffle.FillColor = System.Drawing.Color.Empty;
             this.btn_shuffle.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btn_shuffle.ForeColor = System.Drawing.Color.White;
-            this.btn_shuffle.Image = ((System.Drawing.Image)(resources.GetObject("btn_shuffle.Image")));
+            this.btn_shuffle.Image = global::MusicPlayer.Properties.Resources.shuffle;
             this.btn_shuffle.ImageSize = new System.Drawing.Size(30, 30);
             this.btn_shuffle.Location = new System.Drawing.Point(114, 490);
             this.btn_shuffle.Name = "btn_shuffle";
@@ -727,7 +728,7 @@ namespace MusicPlayer
             this.btn_mute_volume.FillColor = System.Drawing.Color.Empty;
             this.btn_mute_volume.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btn_mute_volume.ForeColor = System.Drawing.Color.White;
-            this.btn_mute_volume.Image = global::MusicPlayer.Properties.Resources.high_vol;
+            this.btn_mute_volume.Image = global::MusicPlayer.Properties.Resources.fullVolume;
             this.btn_mute_volume.ImageSize = new System.Drawing.Size(35, 35);
             this.btn_mute_volume.Location = new System.Drawing.Point(684, 490);
             this.btn_mute_volume.Name = "btn_mute_volume";
@@ -750,7 +751,7 @@ namespace MusicPlayer
             this.btn_repeat.FillColor = System.Drawing.Color.Empty;
             this.btn_repeat.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btn_repeat.ForeColor = System.Drawing.Color.White;
-            this.btn_repeat.Image = ((System.Drawing.Image)(resources.GetObject("btn_repeat.Image")));
+            this.btn_repeat.Image = global::MusicPlayer.Properties.Resources.repeat;
             this.btn_repeat.ImageSize = new System.Drawing.Size(30, 30);
             this.btn_repeat.Location = new System.Drawing.Point(510, 489);
             this.btn_repeat.Name = "btn_repeat";
@@ -772,7 +773,7 @@ namespace MusicPlayer
             this.btn_next.FillColor = System.Drawing.Color.Empty;
             this.btn_next.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btn_next.ForeColor = System.Drawing.Color.White;
-            this.btn_next.Image = ((System.Drawing.Image)(resources.GetObject("btn_next.Image")));
+            this.btn_next.Image = global::MusicPlayer.Properties.Resources.next;
             this.btn_next.ImageSize = new System.Drawing.Size(30, 30);
             this.btn_next.Location = new System.Drawing.Point(433, 489);
             this.btn_next.Name = "btn_next";
@@ -794,7 +795,7 @@ namespace MusicPlayer
             this.btn_previous.FillColor = System.Drawing.Color.Empty;
             this.btn_previous.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btn_previous.ForeColor = System.Drawing.Color.White;
-            this.btn_previous.Image = ((System.Drawing.Image)(resources.GetObject("btn_previous.Image")));
+            this.btn_previous.Image = global::MusicPlayer.Properties.Resources.previous;
             this.btn_previous.ImageSize = new System.Drawing.Size(30, 30);
             this.btn_previous.Location = new System.Drawing.Point(191, 490);
             this.btn_previous.Name = "btn_previous";
@@ -807,7 +808,7 @@ namespace MusicPlayer
             this.lbl_timestamp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbl_timestamp.AutoSize = true;
             this.lbl_timestamp.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_timestamp.ForeColor = System.Drawing.Color.Coral;
+            this.lbl_timestamp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.lbl_timestamp.Location = new System.Drawing.Point(56, 461);
             this.lbl_timestamp.Name = "lbl_timestamp";
             this.lbl_timestamp.Size = new System.Drawing.Size(52, 18);
@@ -818,7 +819,7 @@ namespace MusicPlayer
             // 
             this.lbl_valueVolume.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_valueVolume.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_valueVolume.ForeColor = System.Drawing.Color.Coral;
+            this.lbl_valueVolume.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.lbl_valueVolume.Location = new System.Drawing.Point(972, 512);
             this.lbl_valueVolume.Name = "lbl_valueVolume";
             this.lbl_valueVolume.Size = new System.Drawing.Size(52, 18);
@@ -830,7 +831,7 @@ namespace MusicPlayer
             this.lbl_total_time.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_total_time.AutoSize = true;
             this.lbl_total_time.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_total_time.ForeColor = System.Drawing.Color.Coral;
+            this.lbl_total_time.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.lbl_total_time.Location = new System.Drawing.Point(588, 461);
             this.lbl_total_time.Name = "lbl_total_time";
             this.lbl_total_time.Size = new System.Drawing.Size(52, 18);
@@ -848,7 +849,7 @@ namespace MusicPlayer
             this.btn_play_pause.FillColor = System.Drawing.Color.Empty;
             this.btn_play_pause.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btn_play_pause.ForeColor = System.Drawing.Color.White;
-            this.btn_play_pause.Image = ((System.Drawing.Image)(resources.GetObject("btn_play_pause.Image")));
+            this.btn_play_pause.Image = global::MusicPlayer.Properties.Resources.playIcon;
             this.btn_play_pause.ImageSize = new System.Drawing.Size(60, 60);
             this.btn_play_pause.Location = new System.Drawing.Point(268, 490);
             this.btn_play_pause.Name = "btn_play_pause";
@@ -872,7 +873,7 @@ namespace MusicPlayer
             // 
             this.pnl_formSetting.BackColor = System.Drawing.Color.WhiteSmoke;
             this.pnl_formSetting.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.pnl_formSetting.Location = new System.Drawing.Point(0, 44);
+            this.pnl_formSetting.Location = new System.Drawing.Point(0, 47);
             this.pnl_formSetting.Name = "pnl_formSetting";
             this.pnl_formSetting.Size = new System.Drawing.Size(1027, 522);
             this.pnl_formSetting.TabIndex = 14;
@@ -881,7 +882,6 @@ namespace MusicPlayer
             // pnl_background
             // 
             this.pnl_background.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(38)))), ((int)(((byte)(32)))));
-            this.pnl_background.Controls.Add(this.pnl_formSetting);
             this.pnl_background.Controls.Add(this.pnl_music_main);
             this.pnl_background.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnl_background.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));

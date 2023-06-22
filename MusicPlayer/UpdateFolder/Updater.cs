@@ -76,7 +76,7 @@ namespace MusicPlayer.UpdateFolder
             }
         }
 
-        public void DownloadUpdate(string downloadUrl, string releaseNotes)
+        private void DownloadUpdate(string downloadUrl, string releaseNotes)
         {
             try
             {

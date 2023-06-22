@@ -7,23 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using DiscordRPC.Logging;
 using DiscordRPC;
-using DiscordRPC.Helper;
-using DiscordRPC.Message;
 using Guna.UI2.WinForms;
 using Microsoft.Win32;
 using MusicPlayer.Forms;
-using System.IO;
-using TagLib;
-using TagLib.Riff;
 using WMPLib;
 using Button = DiscordRPC.Button;
-using File = TagLib.File;
-using Timer = System.Windows.Forms.Timer;
-using System.Runtime.InteropServices;
 
 
 namespace MusicPlayer
@@ -37,15 +27,12 @@ namespace MusicPlayer
         // Random index For Shuffle
         private int indexRandom, selectedIndexControl, secound = 0, minute = 0;
         // Favorite Song List 
-        public List<string> favoritesList = new List<string>();
+        public List<MusicFileInformation> favoritesList = new List<MusicFileInformation>();
         // Index Selected Control in Panel Music        
         // Discord Object Client for Activity
         public DiscordRpcClient client;
         public string songInfoURLPassed = "";
-        // Song Name
-        private string filename = "Musicname";
-        // Address SongFile
-        private string URL = "Musicname";
+        private string filename = "Musicname", URL = "Musicname";
         // Mode Play URL/File
         private string ModePlay = "File";
         private bool st = false;
@@ -53,7 +40,7 @@ namespace MusicPlayer
         public int indexPlayerMusic;
         // List Address Musics
         private List<string> files = new List<string>();
-        public List<string> paths = new List<string>();
+        public List<MusicFileInformation> fileInformations = new List<MusicFileInformation>();
         // List Controls in PanelMusics
         public List<ListBoxMusicPlayer> ControlsPanelMusicList = new List<ListBoxMusicPlayer>();
         // ControlPanel ButtonsList
@@ -150,7 +137,7 @@ namespace MusicPlayer
         public void AddFavoriteSong(string musicAddress)
         {
             var item = ControlsPanelMusicList.Find(n => n.MusicAddress == musicAddress);
-            favoritesList.Add(item.MusicAddress);
+            favoritesList.Add(MusicFileInfoReader.GetMusicFileInformation(item.MusicAddress));
             //item.pic_favorite.Image = Properties.Resources.favoriteSelected;
             if (!System.IO.File.Exists(Application.StartupPath + @"\favorites.txt"))
                 System.IO.File.Create(Application.StartupPath + @"\favorites.txt");
@@ -166,17 +153,17 @@ namespace MusicPlayer
         }
         public bool checkFavorite(string musicAddress)
         {
-            return favoritesList.Any(n => n == musicAddress);
+            return favoritesList.Any(n => n.Path == musicAddress);
         }
 
         public async void deleteFavorite(string musicAddress)
         {
-            favoritesList.Remove(musicAddress);
+            favoritesList.Remove(favoritesList.Find(m => m.Path == musicAddress));
             using (StreamWriter sw = new StreamWriter(Application.StartupPath + @"\favorites.txt"))
             {
-                foreach (string favorite in favoritesList)
+                foreach (MusicFileInformation favorite in favoritesList)
                 {
-                    await sw.WriteAsync(favorite + "\n");
+                    await sw.WriteAsync(favorite.Path + "\n");
                 }
             }
 
@@ -247,8 +234,6 @@ namespace MusicPlayer
             tb_volume.Value = wmp_player.settings.volume;
             Initialize();
             LoadFavoritesSongs(true, false);
-            //setupOpenWithWindows();
-            // checkUpdate();
         }
 
         public Dictionary<string, string> updateInfo = new Dictionary<string, string>();
@@ -345,11 +330,11 @@ namespace MusicPlayer
             CheckMute();
             if (st)
             {
-                btn_play_pause.Image = Properties.Resources.icon_pause;
+                btn_play_pause.Image = Properties.Resources.pauseIcon;
             }
             else
             {
-                btn_play_pause.Image = Properties.Resources.icon_play;
+                btn_play_pause.Image = Properties.Resources.playIcon;
             }
         }
 
@@ -437,21 +422,21 @@ namespace MusicPlayer
         {
             await Task.Run(() =>
             {
-                paths = paths.Distinct().ToList();
+                fileInformations = fileInformations.Distinct().ToList();
                 ControlsPanelMusicList.Clear();
                 pnl_listMusics.Invoke(new Action(() =>
                 {
                     pnl_listMusics.Controls.Clear();
                 }));
-                for (int i = 0; i < paths.Count; i++)
+                for (int i = 0; i < fileInformations.Count; i++)
                 {
-                    var control = new ListBoxMusicPlayer(this, i, paths[i], getFileName(paths[i]),
-                        getDuration(paths[i]), GetImageFile(paths[i]), ControlOnClick, ControlOnMouseHover)
+                    var control = new ListBoxMusicPlayer(this, i, fileInformations[i].Path, fileInformations[i].FileName,
+                       MusicFileInfoReader.FormatDuration(fileInformations[i].Duration), ImageConverter.ConvertImageBufferToBitmap(fileInformations[i].ImageBuffer), ControlOnClick, ControlOnMouseHover)
                     {
                         Dock = DockStyle.Top
                     };
                     ControlsPanelMusicList.Add(control);
-                    if (favoritesList.Any(n => n == control.MusicAddress))
+                    if (favoritesList.Any(n => n.Path == control.MusicAddress))
                         control.pic_favorite.Image = Properties.Resources.favoriteSelected;
                 }
 
@@ -471,7 +456,7 @@ namespace MusicPlayer
             if (dr == DialogResult.OK)
             {
                 files.AddRange(opd_addmusic.SafeFileNames);
-                paths.AddRange(opd_addmusic.FileNames);
+                InsertDataFiles(opd_addmusic.FileNames);
                 await InsertFilesMusic();
                 files.Clear();
             }
@@ -479,8 +464,14 @@ namespace MusicPlayer
             SetFocusedRight();
             FocusMusic(wmp_player.URL);
         }
-
-        private void LoadFavoritesSongs(bool favoriteInsert, bool pathsInsert = true)
+        private void InsertDataFiles(string[] fileInformationsList)
+        {
+            foreach (string path in fileInformationsList)
+            {
+                fileInformations.Add(MusicFileInfoReader.GetMusicFileInformation(path));
+            }
+        }
+        private void LoadFavoritesSongs(bool favoriteInsert, bool fileInformationsInsert = true)
         {
             if (System.IO.File.Exists(@"favorites.txt"))
             {
@@ -488,17 +479,17 @@ namespace MusicPlayer
                 {
                     while (!sr.EndOfStream)
                     {
-                        if (pathsInsert)
-                            paths.Add(sr.ReadLine());
+                        if (fileInformationsInsert)
+                            fileInformations.Add(MusicFileInfoReader.GetMusicFileInformation(sr.ReadLine()));
                         if (favoriteInsert)
-                            favoritesList.Add(sr.ReadLine());
+                            favoritesList.Add(MusicFileInfoReader.GetMusicFileInformation(sr.ReadLine()));
                     }
                 }
             }
         }
         private void ControlOnMouseHover(object sender, EventArgs e)
         {
-            tt_listbox.SetToolTip(((Control)sender), paths.Count.ToString());
+            tt_listbox.SetToolTip(((Control)sender), fileInformations.Count.ToString());
         }
 
         public void SetFocusedRight()
@@ -581,7 +572,7 @@ namespace MusicPlayer
         private void Stop()
         {
             wmp_player.Ctlcontrols.stop();
-            btn_play_pause.Image = Properties.Resources.icon_play;
+            btn_play_pause.Image = Properties.Resources.playIcon;
             st = false;
             rest_currentPosition();
             rest_frm();
@@ -612,7 +603,7 @@ namespace MusicPlayer
             catch (System.ArgumentException ex)
             {
                 MessageBox.Show(ex.Message);
-                paths.RemoveAt(lb_musics.SelectedIndex);
+                fileInformations.RemoveAt(lb_musics.SelectedIndex);
                 files.RemoveAt(lb_musics.SelectedIndex);
                 lb_musics.Items.RemoveAt(lb_musics.SelectedIndex);
                 // PlayFile(lb_musics.SelectedIndex + 1);
@@ -690,7 +681,7 @@ namespace MusicPlayer
             }
             else if (selectedIndexControl == 0 && ControlsPanelMusicList.Count > 2)
             {
-                selectedIndexControl = paths.Count - 1;
+                selectedIndexControl = fileInformations.Count - 1;
                 NextOrPervious();
             }
         }
@@ -871,7 +862,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ControlsPanelMusicList.Clear();
                 if (ModePlay == "File")
                 {
-                    paths.Clear();
+                    fileInformations.Clear();
                     files.Clear();
                 }
 
@@ -891,7 +882,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (f.EndsWith(".mp3") || f.EndsWith(".wav"))
                     {
                         lb_musics.AddItem(new FIleIteam(f).ToString());
-                        paths.Add(f);
+                        fileInformations.Add(MusicFileInfoReader.GetMusicFileInformation(f));
                     }
                 }
                 SetSingleMusicItemListBox();
@@ -953,7 +944,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 lbl_status.ForeColor = Color.GreenYellow;
                 timer_time_muic.Enabled = true;
                 tsm_status.Text = "Status : Playing";
-                btn_play_pause.Image = Properties.Resources.icon_pause;
+                btn_play_pause.Image = Properties.Resources.pauseIcon;
                 timer_controls.Stop();
 
             }
@@ -962,7 +953,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 lbl_status.Text = "Pause";
                 lbl_status.ForeColor = Color.Orange;
                 tsm_status.Text = "Status : Pause";
-                btn_play_pause.Image = Properties.Resources.icon_play;
+                btn_play_pause.Image = Properties.Resources.playIcon;
             }
             else if (wmp_player.playState == WMPPlayState.wmppsStopped || wmp_player.playState == WMPLib.WMPPlayState.wmppsMediaEnded)
             {
@@ -975,7 +966,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 minute = 0;
                 secound = 0;
                 //-----------
-                btn_play_pause.Image = Properties.Resources.icon_play;
+                btn_play_pause.Image = Properties.Resources.playIcon;
                 st = false;
                 timer_controls.Start();
 
@@ -1019,29 +1010,29 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
             wmp_player.settings.volume = tb_volume.Value;
             // chng icon for volumes
 
-            if (tb_volume.Value < 50)
-            {
-                btn_mute_volume.Image = Properties.Resources.icon_vl;
-            }
+            if (tb_volume.Value < 1)
+                btn_mute_volume.Image = Properties.Resources.mute;
+            else if (tb_volume.Value < 50)
+                btn_mute_volume.Image = Properties.Resources.mediumVolume;
             else
-            {
-                btn_mute_volume.Image = Properties.Resources.high_vol;
-            }
-
-
+                btn_mute_volume.Image = Properties.Resources.fullVolume;
         }
 
         private void btn_mute_volume_Click(object sender, EventArgs e)
         {
             if (wmp_player.settings.mute)
             {
-                wmp_player.settings.mute = false;
-                btn_mute_volume.Image = Properties.Resources.icon_vl;
+                if (tb_volume.Value < 1)
+                    btn_mute_volume.Image = Properties.Resources.mute;
+                else if (tb_volume.Value < 50)
+                    btn_mute_volume.Image = Properties.Resources.mediumVolume;
+                else
+                    btn_mute_volume.Image = Properties.Resources.fullVolume;
             }
             else
             {
                 wmp_player.settings.mute = true;
-                btn_mute_volume.Image = Properties.Resources.icon_mute;
+                btn_mute_volume.Image = Properties.Resources.mute;
             }
         }
 
@@ -1160,7 +1151,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void pnl_listMusics_MouseHover(object sender, EventArgs e)
         {
-            tt_listbox.SetToolTip(pnl_listMusics, paths.Count.ToString());
+            tt_listbox.SetToolTip(pnl_listMusics, fileInformations.Count.ToString());
         }
 
         private void pnl_listMusics_DragDrop(object sender, DragEventArgs e)
@@ -1172,7 +1163,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 {
                     if (f.EndsWith(".mp3") || f.EndsWith(".wav"))
                     {
-                        paths.Add(f);
+                        fileInformations.Add(MusicFileInfoReader.GetMusicFileInformation(f));
                     }
                 }
 
@@ -1283,7 +1274,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         private void tsm_info_Click(object sender, EventArgs e)
         {
-            new frm_songInfo(songInfoURLPassed).ShowDialog();
+            new frm_songInfo(fileInformations[indexPlayerMusic]).ShowDialog();
         }
 
         private async void tsm_loadFavorites_Click(object sender, EventArgs e)

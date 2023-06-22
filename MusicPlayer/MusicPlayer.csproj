@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FIleIteam.cs" />
+    <Compile Include="FileManager\MusicFileInfoReader.cs" />
     <Compile Include="FormInPanelParent.cs" />
     <Compile Include="Forms\frm_dl.cs">
       <SubType>Form</SubType>
@@ -156,6 +157,7 @@
       <DependentUpon>frm_songInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="IniFile.cs" />
+    <Compile Include="Interfaces\MusicFileInformation.cs" />
     <Compile Include="ListBoxMusicPlayer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -173,6 +175,7 @@
     <Compile Include="UpdateFolder\Updater.cs" />
     <Compile Include="Updater.cs" />
     <Compile Include="UrlChecker.cs" />
+    <Compile Include="Utility\ImageConverter.cs" />
     <EmbeddedResource Include="Forms\frm_dl.resx">
       <DependentUpon>frm_dl.cs</DependentUpon>
     </EmbeddedResource>
@@ -244,6 +247,20 @@
     <Content Include="images\high_vol.png" />
     <None Include="images\iconShow2.ico" />
     <None Include="images\iconShow.ico" />
+    <None Include="images\Icons\fullVolume.png" />
+    <None Include="images\Icons\lowVolume.png" />
+    <None Include="images\Icons\mediumVolume.png" />
+    <None Include="images\Icons\mute.png" />
+    <None Include="images\Icons\pause.png" />
+    <None Include="images\Icons\play.png" />
+    <None Include="images\Icons\stop.png" />
+    <None Include="images\Icons\next.png" />
+    <None Include="images\Icons\previous.png" />
+    <None Include="images\Icons\repeat.png" />
+    <None Include="images\Icons\shuffle.png" />
+    <None Include="images\Icons\stopIcon.png" />
+    <None Include="images\Icons\playIcon.png" />
+    <None Include="images\Icons\pauseIcon.png" />
     <Content Include="images\icon_about.png" />
     <Content Include="images\icon_app2.ico" />
     <Content Include="images\icon_minimize.png" />

@@ -36,6 +36,7 @@
             this.lbl_loading = new System.Windows.Forms.Label();
             this.pnl_preview = new Guna.UI2.WinForms.Guna2Panel();
             this.pnl_header = new Guna.UI2.WinForms.Guna2Panel();
+            this.btn_search = new Guna.UI2.WinForms.Guna2Button();
             this.btn_exitP = new Guna.UI2.WinForms.Guna2Button();
             this.btn_minimizeP = new Guna.UI2.WinForms.Guna2Button();
             this.btn_aboutP = new Guna.UI2.WinForms.Guna2Button();
@@ -43,14 +44,6 @@
             this.btn_settingP = new Guna.UI2.WinForms.Guna2Button();
             this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.lbl_titleFormMusic = new System.Windows.Forms.Label();
-            this.btn_stop = new Guna.UI2.WinForms.Guna2Button();
-            this.btn_next = new Guna.UI2.WinForms.Guna2Button();
-            this.btn_previous = new Guna.UI2.WinForms.Guna2Button();
-            this.btn_play_pause = new Guna.UI2.WinForms.Guna2Button();
-            this.lbl_timestamp = new System.Windows.Forms.Label();
-            this.lbl_total_time = new System.Windows.Forms.Label();
-            this.lbl_music_name = new System.Windows.Forms.Label();
-            this.tb_music = new Guna.UI2.WinForms.Guna2TrackBar();
             this.lbl_beta = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.pnl_tools = new Guna.UI2.WinForms.Guna2Panel();
@@ -64,7 +57,16 @@
             this.label4 = new System.Windows.Forms.Label();
             this.btn_exit = new Guna.UI2.WinForms.Guna2Button();
             this.bf_form = new Guna.UI2.WinForms.Guna2BorderlessForm(this.components);
-            this.btn_search = new Guna.UI2.WinForms.Guna2Button();
+            this.btn_stop = new Guna.UI2.WinForms.Guna2Button();
+            this.tb_music = new Guna.UI2.WinForms.Guna2TrackBar();
+            this.lbl_music_name = new System.Windows.Forms.Label();
+            this.btn_shuffle = new Guna.UI2.WinForms.Guna2Button();
+            this.btn_repeat = new Guna.UI2.WinForms.Guna2Button();
+            this.btn_next = new Guna.UI2.WinForms.Guna2Button();
+            this.btn_previous = new Guna.UI2.WinForms.Guna2Button();
+            this.lbl_timestamp = new System.Windows.Forms.Label();
+            this.lbl_total_time = new System.Windows.Forms.Label();
+            this.btn_play_pause = new Guna.UI2.WinForms.Guna2Button();
             this.pnl_parent.SuspendLayout();
             this.pnl_loading.SuspendLayout();
             this.pnl_preview.SuspendLayout();
@@ -131,15 +133,17 @@
             // pnl_preview
             // 
             this.pnl_preview.AutoSize = true;
-            this.pnl_preview.Controls.Add(this.pnl_header);
             this.pnl_preview.Controls.Add(this.btn_stop);
+            this.pnl_preview.Controls.Add(this.tb_music);
+            this.pnl_preview.Controls.Add(this.lbl_music_name);
+            this.pnl_preview.Controls.Add(this.btn_shuffle);
+            this.pnl_preview.Controls.Add(this.btn_repeat);
             this.pnl_preview.Controls.Add(this.btn_next);
             this.pnl_preview.Controls.Add(this.btn_previous);
-            this.pnl_preview.Controls.Add(this.btn_play_pause);
             this.pnl_preview.Controls.Add(this.lbl_timestamp);
             this.pnl_preview.Controls.Add(this.lbl_total_time);
-            this.pnl_preview.Controls.Add(this.lbl_music_name);
-            this.pnl_preview.Controls.Add(this.tb_music);
+            this.pnl_preview.Controls.Add(this.btn_play_pause);
+            this.pnl_preview.Controls.Add(this.pnl_header);
             this.pnl_preview.Location = new System.Drawing.Point(223, 109);
             this.pnl_preview.Name = "pnl_preview";
             this.pnl_preview.Size = new System.Drawing.Size(779, 375);
@@ -163,6 +167,27 @@
             this.pnl_header.Name = "pnl_header";
             this.pnl_header.Size = new System.Drawing.Size(775, 67);
             this.pnl_header.TabIndex = 12;
+            // 
+            // btn_search
+            // 
+            this.btn_search.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_search.Animated = true;
+            this.btn_search.BackColor = System.Drawing.Color.Transparent;
+            this.btn_search.BorderRadius = 20;
+            this.btn_search.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_search.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btn_search.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btn_search.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btn_search.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btn_search.FillColor = System.Drawing.Color.Transparent;
+            this.btn_search.Font = new System.Drawing.Font("Museo Sans Cyrl 900", 9F, System.Drawing.FontStyle.Bold);
+            this.btn_search.ForeColor = System.Drawing.Color.White;
+            this.btn_search.Image = global::MusicPlayer.Properties.Resources.search;
+            this.btn_search.ImageSize = new System.Drawing.Size(30, 30);
+            this.btn_search.Location = new System.Drawing.Point(444, 12);
+            this.btn_search.Name = "btn_search";
+            this.btn_search.Size = new System.Drawing.Size(48, 47);
+            this.btn_search.TabIndex = 20;
             // 
             // btn_exitP
             // 
@@ -298,136 +323,6 @@
             this.lbl_titleFormMusic.Text = "MusicPlayer";
             this.lbl_titleFormMusic.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btn_stop
-            // 
-            this.btn_stop.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_stop.Animated = true;
-            this.btn_stop.AnimatedGIF = true;
-            this.btn_stop.BackColor = System.Drawing.Color.Transparent;
-            this.btn_stop.BorderRadius = 5;
-            this.btn_stop.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btn_stop.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btn_stop.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btn_stop.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btn_stop.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btn_stop.FillColor = System.Drawing.Color.Empty;
-            this.btn_stop.Font = new System.Drawing.Font("Museo Sans Cyrl 900", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_stop.ForeColor = System.Drawing.Color.White;
-            this.btn_stop.Image = global::MusicPlayer.Properties.Resources.stop_icon;
-            this.btn_stop.ImageSize = new System.Drawing.Size(60, 60);
-            this.btn_stop.Location = new System.Drawing.Point(392, 266);
-            this.btn_stop.Name = "btn_stop";
-            this.btn_stop.Size = new System.Drawing.Size(73, 58);
-            this.btn_stop.TabIndex = 16;
-            // 
-            // btn_next
-            // 
-            this.btn_next.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_next.Animated = true;
-            this.btn_next.BackColor = System.Drawing.Color.Transparent;
-            this.btn_next.BorderRadius = 5;
-            this.btn_next.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btn_next.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btn_next.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btn_next.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btn_next.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btn_next.FillColor = System.Drawing.Color.Empty;
-            this.btn_next.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btn_next.ForeColor = System.Drawing.Color.White;
-            this.btn_next.Image = ((System.Drawing.Image)(resources.GetObject("btn_next.Image")));
-            this.btn_next.ImageSize = new System.Drawing.Size(30, 30);
-            this.btn_next.Location = new System.Drawing.Point(480, 266);
-            this.btn_next.Name = "btn_next";
-            this.btn_next.Size = new System.Drawing.Size(62, 57);
-            this.btn_next.TabIndex = 17;
-            // 
-            // btn_previous
-            // 
-            this.btn_previous.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_previous.Animated = true;
-            this.btn_previous.BackColor = System.Drawing.Color.Transparent;
-            this.btn_previous.BorderRadius = 5;
-            this.btn_previous.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btn_previous.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btn_previous.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btn_previous.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btn_previous.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btn_previous.FillColor = System.Drawing.Color.Empty;
-            this.btn_previous.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btn_previous.ForeColor = System.Drawing.Color.White;
-            this.btn_previous.Image = ((System.Drawing.Image)(resources.GetObject("btn_previous.Image")));
-            this.btn_previous.ImageSize = new System.Drawing.Size(30, 30);
-            this.btn_previous.Location = new System.Drawing.Point(238, 267);
-            this.btn_previous.Name = "btn_previous";
-            this.btn_previous.Size = new System.Drawing.Size(62, 57);
-            this.btn_previous.TabIndex = 18;
-            // 
-            // btn_play_pause
-            // 
-            this.btn_play_pause.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_play_pause.Animated = true;
-            this.btn_play_pause.BackColor = System.Drawing.Color.Transparent;
-            this.btn_play_pause.BorderRadius = 5;
-            this.btn_play_pause.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btn_play_pause.DisabledState.ForeColor = System.Drawing.Color.Gray;
-            this.btn_play_pause.FillColor = System.Drawing.Color.Empty;
-            this.btn_play_pause.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btn_play_pause.ForeColor = System.Drawing.Color.White;
-            this.btn_play_pause.Image = ((System.Drawing.Image)(resources.GetObject("btn_play_pause.Image")));
-            this.btn_play_pause.ImageSize = new System.Drawing.Size(60, 60);
-            this.btn_play_pause.Location = new System.Drawing.Point(315, 267);
-            this.btn_play_pause.Name = "btn_play_pause";
-            this.btn_play_pause.Size = new System.Drawing.Size(62, 57);
-            this.btn_play_pause.TabIndex = 19;
-            // 
-            // lbl_timestamp
-            // 
-            this.lbl_timestamp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lbl_timestamp.AutoSize = true;
-            this.lbl_timestamp.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_timestamp.ForeColor = System.Drawing.Color.Coral;
-            this.lbl_timestamp.Location = new System.Drawing.Point(98, 234);
-            this.lbl_timestamp.Name = "lbl_timestamp";
-            this.lbl_timestamp.Size = new System.Drawing.Size(52, 18);
-            this.lbl_timestamp.TabIndex = 14;
-            this.lbl_timestamp.Text = "00:00";
-            // 
-            // lbl_total_time
-            // 
-            this.lbl_total_time.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbl_total_time.AutoSize = true;
-            this.lbl_total_time.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_total_time.ForeColor = System.Drawing.Color.Coral;
-            this.lbl_total_time.Location = new System.Drawing.Point(625, 231);
-            this.lbl_total_time.Name = "lbl_total_time";
-            this.lbl_total_time.Size = new System.Drawing.Size(52, 18);
-            this.lbl_total_time.TabIndex = 15;
-            this.lbl_total_time.Text = "00:00";
-            // 
-            // lbl_music_name
-            // 
-            this.lbl_music_name.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lbl_music_name.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_music_name.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lbl_music_name.Location = new System.Drawing.Point(241, 196);
-            this.lbl_music_name.Name = "lbl_music_name";
-            this.lbl_music_name.Size = new System.Drawing.Size(270, 18);
-            this.lbl_music_name.TabIndex = 13;
-            this.lbl_music_name.Text = "Musicname";
-            this.lbl_music_name.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // tb_music
-            // 
-            this.tb_music.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tb_music.BackColor = System.Drawing.Color.Transparent;
-            this.tb_music.Location = new System.Drawing.Point(165, 229);
-            this.tb_music.Name = "tb_music";
-            this.tb_music.Size = new System.Drawing.Size(443, 23);
-            this.tb_music.TabIndex = 12;
-            this.tb_music.ThumbColor = System.Drawing.Color.Coral;
-            this.tb_music.Value = 0;
-            // 
             // lbl_beta
             // 
             this.lbl_beta.AutoSize = true;
@@ -534,6 +429,7 @@
             // 
             // btn_updateApp
             // 
+            this.btn_updateApp.Animated = true;
             this.btn_updateApp.BackColor = System.Drawing.Color.Transparent;
             this.btn_updateApp.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_updateApp.CustomBorderColor = System.Drawing.Color.Transparent;
@@ -546,14 +442,15 @@
             this.btn_updateApp.ForeColor = System.Drawing.Color.White;
             this.btn_updateApp.Image = global::MusicPlayer.Properties.Resources.update1;
             this.btn_updateApp.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.btn_updateApp.ImageOffset = new System.Drawing.Point(10, 0);
             this.btn_updateApp.ImageSize = new System.Drawing.Size(30, 30);
             this.btn_updateApp.Location = new System.Drawing.Point(0, 463);
             this.btn_updateApp.Name = "btn_updateApp";
             this.btn_updateApp.Size = new System.Drawing.Size(198, 59);
             this.btn_updateApp.TabIndex = 3;
-            this.btn_updateApp.Text = "Update";
+            this.btn_updateApp.Text = "Check Updates";
             this.btn_updateApp.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btn_updateApp.TextOffset = new System.Drawing.Point(20, 0);
+            this.btn_updateApp.TextOffset = new System.Drawing.Point(15, 0);
             this.btn_updateApp.Click += new System.EventHandler(this.btn_updateApp_Click);
             // 
             // btn_font
@@ -667,26 +564,177 @@
             this.bf_form.ResizeForm = false;
             this.bf_form.TransparentWhileDrag = true;
             // 
-            // btn_search
+            // btn_stop
             // 
-            this.btn_search.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_search.Animated = true;
-            this.btn_search.BackColor = System.Drawing.Color.Transparent;
-            this.btn_search.BorderRadius = 20;
-            this.btn_search.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btn_search.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btn_search.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btn_search.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btn_search.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btn_search.FillColor = System.Drawing.Color.Transparent;
-            this.btn_search.Font = new System.Drawing.Font("Museo Sans Cyrl 900", 9F, System.Drawing.FontStyle.Bold);
-            this.btn_search.ForeColor = System.Drawing.Color.White;
-            this.btn_search.Image = global::MusicPlayer.Properties.Resources.search;
-            this.btn_search.ImageSize = new System.Drawing.Size(30, 30);
-            this.btn_search.Location = new System.Drawing.Point(444, 12);
-            this.btn_search.Name = "btn_search";
-            this.btn_search.Size = new System.Drawing.Size(48, 47);
-            this.btn_search.TabIndex = 20;
+            this.btn_stop.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_stop.Animated = true;
+            this.btn_stop.AnimatedGIF = true;
+            this.btn_stop.BackColor = System.Drawing.Color.Transparent;
+            this.btn_stop.BorderRadius = 5;
+            this.btn_stop.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_stop.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btn_stop.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btn_stop.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btn_stop.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btn_stop.FillColor = System.Drawing.Color.Empty;
+            this.btn_stop.Font = new System.Drawing.Font("Museo Sans Cyrl 900", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_stop.ForeColor = System.Drawing.Color.White;
+            this.btn_stop.Image = global::MusicPlayer.Properties.Resources.stopIcon;
+            this.btn_stop.ImageSize = new System.Drawing.Size(60, 60);
+            this.btn_stop.Location = new System.Drawing.Point(389, 246);
+            this.btn_stop.Name = "btn_stop";
+            this.btn_stop.Size = new System.Drawing.Size(73, 58);
+            this.btn_stop.TabIndex = 13;
+            // 
+            // tb_music
+            // 
+            this.tb_music.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tb_music.BackColor = System.Drawing.Color.Transparent;
+            this.tb_music.Location = new System.Drawing.Point(158, 213);
+            this.tb_music.Name = "tb_music";
+            this.tb_music.Size = new System.Drawing.Size(468, 23);
+            this.tb_music.TabIndex = 22;
+            this.tb_music.ThumbColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.tb_music.Value = 0;
+            // 
+            // lbl_music_name
+            // 
+            this.lbl_music_name.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lbl_music_name.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_music_name.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lbl_music_name.Location = new System.Drawing.Point(255, 192);
+            this.lbl_music_name.Name = "lbl_music_name";
+            this.lbl_music_name.Size = new System.Drawing.Size(270, 18);
+            this.lbl_music_name.TabIndex = 19;
+            this.lbl_music_name.Text = "Musicname";
+            this.lbl_music_name.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btn_shuffle
+            // 
+            this.btn_shuffle.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_shuffle.Animated = true;
+            this.btn_shuffle.BackColor = System.Drawing.Color.Transparent;
+            this.btn_shuffle.BorderRadius = 5;
+            this.btn_shuffle.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_shuffle.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btn_shuffle.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btn_shuffle.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btn_shuffle.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btn_shuffle.FillColor = System.Drawing.Color.Empty;
+            this.btn_shuffle.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btn_shuffle.ForeColor = System.Drawing.Color.White;
+            this.btn_shuffle.Image = global::MusicPlayer.Properties.Resources.shuffle;
+            this.btn_shuffle.ImageSize = new System.Drawing.Size(30, 30);
+            this.btn_shuffle.Location = new System.Drawing.Point(158, 247);
+            this.btn_shuffle.Name = "btn_shuffle";
+            this.btn_shuffle.Size = new System.Drawing.Size(62, 57);
+            this.btn_shuffle.TabIndex = 14;
+            // 
+            // btn_repeat
+            // 
+            this.btn_repeat.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_repeat.Animated = true;
+            this.btn_repeat.BackColor = System.Drawing.Color.Transparent;
+            this.btn_repeat.BorderRadius = 5;
+            this.btn_repeat.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_repeat.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btn_repeat.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btn_repeat.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btn_repeat.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btn_repeat.FillColor = System.Drawing.Color.Empty;
+            this.btn_repeat.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btn_repeat.ForeColor = System.Drawing.Color.White;
+            this.btn_repeat.Image = global::MusicPlayer.Properties.Resources.repeat;
+            this.btn_repeat.ImageSize = new System.Drawing.Size(30, 30);
+            this.btn_repeat.Location = new System.Drawing.Point(554, 246);
+            this.btn_repeat.Name = "btn_repeat";
+            this.btn_repeat.Size = new System.Drawing.Size(62, 57);
+            this.btn_repeat.TabIndex = 15;
+            // 
+            // btn_next
+            // 
+            this.btn_next.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_next.Animated = true;
+            this.btn_next.BackColor = System.Drawing.Color.Transparent;
+            this.btn_next.BorderRadius = 5;
+            this.btn_next.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_next.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btn_next.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btn_next.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btn_next.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btn_next.FillColor = System.Drawing.Color.Empty;
+            this.btn_next.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btn_next.ForeColor = System.Drawing.Color.White;
+            this.btn_next.Image = global::MusicPlayer.Properties.Resources.next;
+            this.btn_next.ImageSize = new System.Drawing.Size(30, 30);
+            this.btn_next.Location = new System.Drawing.Point(477, 246);
+            this.btn_next.Name = "btn_next";
+            this.btn_next.Size = new System.Drawing.Size(62, 57);
+            this.btn_next.TabIndex = 16;
+            // 
+            // btn_previous
+            // 
+            this.btn_previous.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_previous.Animated = true;
+            this.btn_previous.BackColor = System.Drawing.Color.Transparent;
+            this.btn_previous.BorderRadius = 5;
+            this.btn_previous.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_previous.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btn_previous.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btn_previous.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btn_previous.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btn_previous.FillColor = System.Drawing.Color.Empty;
+            this.btn_previous.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btn_previous.ForeColor = System.Drawing.Color.White;
+            this.btn_previous.Image = global::MusicPlayer.Properties.Resources.previous;
+            this.btn_previous.ImageSize = new System.Drawing.Size(30, 30);
+            this.btn_previous.Location = new System.Drawing.Point(235, 247);
+            this.btn_previous.Name = "btn_previous";
+            this.btn_previous.Size = new System.Drawing.Size(62, 57);
+            this.btn_previous.TabIndex = 17;
+            // 
+            // lbl_timestamp
+            // 
+            this.lbl_timestamp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbl_timestamp.AutoSize = true;
+            this.lbl_timestamp.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_timestamp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.lbl_timestamp.Location = new System.Drawing.Point(100, 218);
+            this.lbl_timestamp.Name = "lbl_timestamp";
+            this.lbl_timestamp.Size = new System.Drawing.Size(52, 18);
+            this.lbl_timestamp.TabIndex = 20;
+            this.lbl_timestamp.Text = "00:00";
+            // 
+            // lbl_total_time
+            // 
+            this.lbl_total_time.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbl_total_time.AutoSize = true;
+            this.lbl_total_time.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_total_time.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.lbl_total_time.Location = new System.Drawing.Point(632, 218);
+            this.lbl_total_time.Name = "lbl_total_time";
+            this.lbl_total_time.Size = new System.Drawing.Size(52, 18);
+            this.lbl_total_time.TabIndex = 21;
+            this.lbl_total_time.Text = "00:00";
+            // 
+            // btn_play_pause
+            // 
+            this.btn_play_pause.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_play_pause.Animated = true;
+            this.btn_play_pause.BackColor = System.Drawing.Color.Transparent;
+            this.btn_play_pause.BorderRadius = 5;
+            this.btn_play_pause.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_play_pause.DisabledState.ForeColor = System.Drawing.Color.Gray;
+            this.btn_play_pause.FillColor = System.Drawing.Color.Empty;
+            this.btn_play_pause.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btn_play_pause.ForeColor = System.Drawing.Color.White;
+            this.btn_play_pause.Image = global::MusicPlayer.Properties.Resources.playIcon;
+            this.btn_play_pause.ImageSize = new System.Drawing.Size(60, 60);
+            this.btn_play_pause.Location = new System.Drawing.Point(312, 247);
+            this.btn_play_pause.Name = "btn_play_pause";
+            this.btn_play_pause.Size = new System.Drawing.Size(62, 57);
+            this.btn_play_pause.TabIndex = 18;
             // 
             // frm_settings
             // 
@@ -728,14 +776,6 @@
         private Guna.UI2.WinForms.Guna2Button btn_updateApp;
         private Guna.UI2.WinForms.Guna2Button btn_font;
         private Guna.UI2.WinForms.Guna2Panel pnl_preview;
-        private Guna.UI2.WinForms.Guna2TrackBar tb_music;
-        private System.Windows.Forms.Label lbl_music_name;
-        private System.Windows.Forms.Label lbl_timestamp;
-        private System.Windows.Forms.Label lbl_total_time;
-        private Guna.UI2.WinForms.Guna2Button btn_stop;
-        private Guna.UI2.WinForms.Guna2Button btn_next;
-        private Guna.UI2.WinForms.Guna2Button btn_previous;
-        private Guna.UI2.WinForms.Guna2Button btn_play_pause;
         private System.Windows.Forms.Label label2;
         private Guna.UI2.WinForms.Guna2Panel pnl_header;
         private Guna.UI2.WinForms.Guna2Button btn_exitP;
@@ -753,5 +793,15 @@
         private Guna.UI2.WinForms.Guna2Button btn_default;
         private Guna.UI2.WinForms.Guna2Button btn_colorText;
         public Guna.UI2.WinForms.Guna2Button btn_search;
+        private Guna.UI2.WinForms.Guna2Button btn_stop;
+        private Guna.UI2.WinForms.Guna2TrackBar tb_music;
+        public System.Windows.Forms.Label lbl_music_name;
+        private Guna.UI2.WinForms.Guna2Button btn_shuffle;
+        private Guna.UI2.WinForms.Guna2Button btn_repeat;
+        private Guna.UI2.WinForms.Guna2Button btn_next;
+        private Guna.UI2.WinForms.Guna2Button btn_previous;
+        private System.Windows.Forms.Label lbl_timestamp;
+        private System.Windows.Forms.Label lbl_total_time;
+        private Guna.UI2.WinForms.Guna2Button btn_play_pause;
     }
 }

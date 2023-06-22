@@ -13,26 +13,24 @@ namespace MusicPlayer.Forms
 {
     public partial class frm_songInfo : Form
     {
-        private string songUrl;
-        public frm_songInfo(string songUrl)
+        private MusicFileInformation _information;
+        public frm_songInfo(MusicFileInformation information)
         {
             InitializeComponent();
-            this.songUrl = songUrl;
+            this._information = information;
         }
 
         private void frm_songInfo_Load(object sender, EventArgs e)
         {
-            if (songUrl != string.Empty)
+            if (_information != null)
             {
-                TagLib.File tf = TagLib.File.Create(songUrl);
-                lbl_title.Text = Path.GetFileName(songUrl);
-                lbl_duration.Text = tf.Properties.Duration.ToString().Substring(0, 8);
-                lbl_audioBitrate.Text = tf.Properties.AudioBitrate.ToString();
-                lbl_audioChannels.Text = tf.Properties.AudioChannels.ToString();
-                lbl_mediaTypes.Text = tf.Properties.MediaTypes.ToString();
-                if (tf.Tag.FirstAlbumArtist != null)
-                    lbl_author.Text = tf.Tag.FirstAlbumArtist;
-                //            lbl_author.Text = tf.Properties.
+                lbl_title.Text = _information.FileName;
+                lbl_duration.Text = _information.Duration.ToString();
+                lbl_audioBitrate.Text = _information.AudioBitrate.ToString(); ;
+                lbl_audioChannels.Text = _information.AudioChannel.ToString();
+                lbl_mediaTypes.Text = _information.MediaType;
+                if (_information.Author != null)
+                    lbl_author.Text = _information.Author;
             }
         }
 

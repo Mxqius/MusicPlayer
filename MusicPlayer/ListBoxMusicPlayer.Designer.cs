@@ -63,9 +63,9 @@
             // pic_favorite
             // 
             this.pic_favorite.Image = global::MusicPlayer.Properties.Resources.favoriteUnSelected;
-            this.pic_favorite.Location = new System.Drawing.Point(246, 50);
+            this.pic_favorite.Location = new System.Drawing.Point(252, 50);
             this.pic_favorite.Name = "pic_favorite";
-            this.pic_favorite.Size = new System.Drawing.Size(27, 30);
+            this.pic_favorite.Size = new System.Drawing.Size(25, 26);
             this.pic_favorite.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pic_favorite.TabIndex = 2;
             this.pic_favorite.TabStop = false;
@@ -76,9 +76,9 @@
             // pic_deleteMusic
             // 
             this.pic_deleteMusic.Image = global::MusicPlayer.Properties.Resources.deleteMusic;
-            this.pic_deleteMusic.Location = new System.Drawing.Point(213, 51);
+            this.pic_deleteMusic.Location = new System.Drawing.Point(219, 51);
             this.pic_deleteMusic.Name = "pic_deleteMusic";
-            this.pic_deleteMusic.Size = new System.Drawing.Size(27, 30);
+            this.pic_deleteMusic.Size = new System.Drawing.Size(25, 26);
             this.pic_deleteMusic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pic_deleteMusic.TabIndex = 2;
             this.pic_deleteMusic.TabStop = false;
