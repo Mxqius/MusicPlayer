@@ -261,6 +261,9 @@
     <None Include="images\Icons\stopIcon.png" />
     <None Include="images\Icons\playIcon.png" />
     <None Include="images\Icons\pauseIcon.png" />
+    <None Include="images\Icons\high_volume.png" />
+    <None Include="images\Icons\low_volume.png" />
+    <None Include="images\Icons\medium_volume.png" />
     <Content Include="images\icon_about.png" />
     <Content Include="images\icon_app2.ico" />
     <Content Include="images\icon_minimize.png" />

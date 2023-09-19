@@ -103,8 +103,8 @@
             // 
             // wpi_progress
             // 
-            this.wpi_progress.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.wpi_progress.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.wpi_progress.AutoStart = true;
             this.wpi_progress.BackColor = System.Drawing.Color.Transparent;
@@ -117,8 +117,8 @@
             // 
             // lbl_loading
             // 
-            this.lbl_loading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.lbl_loading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_loading.AutoSize = true;
             this.lbl_loading.BackColor = System.Drawing.Color.Transparent;
@@ -152,7 +152,7 @@
             // 
             // pnl_header
             // 
-            this.pnl_header.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.pnl_header.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnl_header.Controls.Add(this.btn_search);
             this.pnl_header.Controls.Add(this.btn_exitP);
@@ -579,7 +579,7 @@
             this.btn_stop.FillColor = System.Drawing.Color.Empty;
             this.btn_stop.Font = new System.Drawing.Font("Museo Sans Cyrl 900", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_stop.ForeColor = System.Drawing.Color.White;
-            this.btn_stop.Image = global::MusicPlayer.Properties.Resources.stopIcon;
+            this.btn_stop.Image = global::MusicPlayer.Properties.Resources.stop;
             this.btn_stop.ImageSize = new System.Drawing.Size(60, 60);
             this.btn_stop.Location = new System.Drawing.Point(389, 246);
             this.btn_stop.Name = "btn_stop";
@@ -588,7 +588,7 @@
             // 
             // tb_music
             // 
-            this.tb_music.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.tb_music.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tb_music.BackColor = System.Drawing.Color.Transparent;
             this.tb_music.Location = new System.Drawing.Point(158, 213);
@@ -729,7 +729,7 @@
             this.btn_play_pause.FillColor = System.Drawing.Color.Empty;
             this.btn_play_pause.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btn_play_pause.ForeColor = System.Drawing.Color.White;
-            this.btn_play_pause.Image = global::MusicPlayer.Properties.Resources.playIcon;
+            this.btn_play_pause.Image = global::MusicPlayer.Properties.Resources.play;
             this.btn_play_pause.ImageSize = new System.Drawing.Size(60, 60);
             this.btn_play_pause.Location = new System.Drawing.Point(312, 247);
             this.btn_play_pause.Name = "btn_play_pause";

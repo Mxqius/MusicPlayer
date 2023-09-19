@@ -233,9 +233,9 @@ namespace MusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap fullVolume {
+        public static System.Drawing.Bitmap high_volume {
             get {
-                object obj = ResourceManager.GetObject("fullVolume", resourceCulture);
+                object obj = ResourceManager.GetObject("high_volume", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -273,9 +273,9 @@ namespace MusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap lowVolume {
+        public static System.Drawing.Bitmap low_volume {
             get {
-                object obj = ResourceManager.GetObject("lowVolume", resourceCulture);
+                object obj = ResourceManager.GetObject("low_volume", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -283,9 +283,9 @@ namespace MusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap mediumVolume {
+        public static System.Drawing.Bitmap medium_volume {
             get {
-                object obj = ResourceManager.GetObject("mediumVolume", resourceCulture);
+                object obj = ResourceManager.GetObject("medium_volume", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -433,16 +433,6 @@ namespace MusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap pauseIcon {
-            get {
-                object obj = ResourceManager.GetObject("pauseIcon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap play {
             get {
                 object obj = ResourceManager.GetObject("play", resourceCulture);
@@ -453,19 +443,9 @@ namespace MusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap play1 {
+        public static System.Drawing.Bitmap play2 {
             get {
-                object obj = ResourceManager.GetObject("play1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap playIcon {
-            get {
-                object obj = ResourceManager.GetObject("playIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("play2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -576,16 +556,6 @@ namespace MusicPlayer.Properties {
         public static System.Drawing.Bitmap stop_icon {
             get {
                 object obj = ResourceManager.GetObject("stop_icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap stopIcon {
-            get {
-                object obj = ResourceManager.GetObject("stopIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -330,11 +330,11 @@ namespace MusicPlayer
             CheckMute();
             if (st)
             {
-                btn_play_pause.Image = Properties.Resources.pauseIcon;
+                btn_play_pause.Image = Properties.Resources.pause;
             }
             else
             {
-                btn_play_pause.Image = Properties.Resources.playIcon;
+                btn_play_pause.Image = Properties.Resources.play;
             }
         }
 
@@ -572,7 +572,7 @@ namespace MusicPlayer
         private void Stop()
         {
             wmp_player.Ctlcontrols.stop();
-            btn_play_pause.Image = Properties.Resources.playIcon;
+            btn_play_pause.Image = Properties.Resources.play;
             st = false;
             rest_currentPosition();
             rest_frm();
@@ -944,7 +944,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 lbl_status.ForeColor = Color.GreenYellow;
                 timer_time_muic.Enabled = true;
                 tsm_status.Text = "Status : Playing";
-                btn_play_pause.Image = Properties.Resources.pauseIcon;
+                btn_play_pause.Image = Properties.Resources.pause;
                 timer_controls.Stop();
 
             }
@@ -953,7 +953,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 lbl_status.Text = "Pause";
                 lbl_status.ForeColor = Color.Orange;
                 tsm_status.Text = "Status : Pause";
-                btn_play_pause.Image = Properties.Resources.playIcon;
+                btn_play_pause.Image = Properties.Resources.play;
             }
             else if (wmp_player.playState == WMPPlayState.wmppsStopped || wmp_player.playState == WMPLib.WMPPlayState.wmppsMediaEnded)
             {
@@ -966,7 +966,7 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 minute = 0;
                 secound = 0;
                 //-----------
-                btn_play_pause.Image = Properties.Resources.playIcon;
+                btn_play_pause.Image = Properties.Resources.play;
                 st = false;
                 timer_controls.Start();
 
@@ -1013,9 +1013,9 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (tb_volume.Value < 1)
                 btn_mute_volume.Image = Properties.Resources.mute;
             else if (tb_volume.Value < 50)
-                btn_mute_volume.Image = Properties.Resources.mediumVolume;
+                btn_mute_volume.Image = Properties.Resources.medium_volume;
             else
-                btn_mute_volume.Image = Properties.Resources.fullVolume;
+                btn_mute_volume.Image = Properties.Resources.high_volume;
         }
 
         private void btn_mute_volume_Click(object sender, EventArgs e)
@@ -1025,9 +1025,9 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 if (tb_volume.Value < 1)
                     btn_mute_volume.Image = Properties.Resources.mute;
                 else if (tb_volume.Value < 50)
-                    btn_mute_volume.Image = Properties.Resources.mediumVolume;
+                    btn_mute_volume.Image = Properties.Resources.medium_volume;
                 else
-                    btn_mute_volume.Image = Properties.Resources.fullVolume;
+                    btn_mute_volume.Image = Properties.Resources.high_volume;
             }
             else
             {
@@ -1223,16 +1223,6 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        private void pb_big_image_music_MouseMove(object sender, MouseEventArgs e)
-        {
-            pb_big_image_music.BorderRadius = 10;
-        }
-
-        private void pb_big_image_music_MouseLeave(object sender, EventArgs e)
-        {
-            pb_big_image_music.BorderRadius = 3;
-        }
-
         private void btn_settings_Click(object sender, EventArgs e)
         {
             pnl_formSetting.Visible = true;
@@ -1274,7 +1264,15 @@ Beta Version", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         private void tsm_info_Click(object sender, EventArgs e)
         {
-            new frm_songInfo(fileInformations[indexPlayerMusic]).ShowDialog();
+
+            try
+            {
+                new frm_songInfo(fileInformations[indexPlayerMusic]).ShowDialog();
+            }
+            catch
+            {
+                return;
+            }            
         }
 
         private async void tsm_loadFavorites_Click(object sender, EventArgs e)

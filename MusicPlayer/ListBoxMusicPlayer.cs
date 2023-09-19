@@ -78,8 +78,12 @@ namespace MusicPlayer
 
         private void ListBoxMusicPlayer_MouseLeave(object sender, EventArgs e)
         {
-            if (formMusicPlayer.wmp_player.URL != null && formMusicPlayer.wmp_player.URL != MusicAddress)
-                BackColor = Color.WhiteSmoke;
+            try
+            {
+                if (formMusicPlayer.wmp_player.URL != null && formMusicPlayer.wmp_player.URL != MusicAddress)
+                    BackColor = Color.WhiteSmoke;
+            }
+            catch { return; }
         }
 
         private void pic_deleteMusic_Click(object sender, EventArgs e)
